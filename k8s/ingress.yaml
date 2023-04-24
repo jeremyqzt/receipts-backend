@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ribbon-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ribbon-receipt-ip
+    networking.gke.io/managed-certificates: managed-cert
+    kubernetes.io/ingress.class: "gce"
+  labels:
+    app: ribbon
+spec:
+  defaultBackend:
+    service:
+      name: ribbonstatic
+      port:
+        number: 80
+  rules:
+    - host: "static.ribbonreceipts.com"
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: ribbonstatic
+              port:
+                number: 80
+    - host: "ui.ribbonreceipts.com"
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: ribbonfe
+              port:
+                number: 80
+    - host: "api.ribbonreceipts.com"
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: ribbonbe
+              port:
+                number: 8080
+    - host: "parse.ribbonreceipts.com"
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: ribbonparser
+              port:
+                number: 8090

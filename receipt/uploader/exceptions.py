@@ -1,0 +1,3 @@
+
+class NoSuchReceiptForUser(Exception):
+    pass

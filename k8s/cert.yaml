@@ -1,0 +1,16 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: managed-cert
+spec:
+  domains:
+    - ribbonreceipts.com
+    - www.ribbonreceipts.com
+    - ui.ribbonreceipts.com
+    - www.ui.ribbonreceipts.com
+    - api.ribbonreceipts.com
+    - www.api.ribbonreceipts.com
+    - static.ribbonreceipts.com
+    - www.static.ribbonreceipts.com
+    - parse.ribbonreceipts.com
+    - www.parse.ribbonreceipts.com

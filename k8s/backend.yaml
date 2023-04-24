@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ribbonbe
+  labels:
+    app: ribbonbe
+spec:
+  selector:
+    matchLabels:
+      app: ribbonbe
+  template:
+    metadata:
+      labels:
+        app: ribbonbe
+    spec:
+      containers:
+      - name: ribbonbe-app
+        image: $IMAGE
+        resources:
+          limits:
+            cpu: 400m
+          requests:
+            cpu: 300m
+        volumeMounts:
+        - name: google-gcs-key
+          mountPath: /var/secrets/google
+        imagePullPolicy: Always
+        env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/credentials.json
+            - name: USE_GS
+              value: "TRUE"
+            - name: USE_CLOUD_SQL
+              value: "TRUE"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: secret_key
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: database
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: password
+        ports:
+        - containerPort: 8080
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.16
+        name: cloudsql-proxy
+        resources:
+          limits:
+            cpu: 150m
+          requests:
+            cpu: 100m
+        command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                  "-instances=ribbon-receipts:us-east4:ribbon-receipts-db=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: cloudsql-oauth-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          - name: cloudsql
+            mountPath: /cloudsql
+      volumes:
+        - name: google-gcs-key
+          secret:
+            secretName: cloudsql-oauth-credentials
+        - name: cloudsql-oauth-credentials
+          secret:
+            secretName: cloudsql-oauth-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ribbonbe
+  labels:
+    app: ribbonbe
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: 'http-ingress'
+  selector:
+    app: ribbonbe

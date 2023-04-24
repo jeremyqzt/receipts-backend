@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ribbonfe
+  labels:
+    app: ribbonfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ribbonfe
+  template:
+    metadata:
+      labels:
+        app: ribbonfe
+    spec:
+      containers:
+      - name: ribbonfe-app
+        image: $IMAGE
+        resources:
+          limits:
+            cpu: 150m
+          requests:
+            cpu: 100m
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: fe-http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ribbonfe
+  labels:
+    app: ribbonfe
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    name: 'http-ingress'
+  selector:
+    app: ribbonfe
