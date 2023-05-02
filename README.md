@@ -15,7 +15,6 @@ Use following commands to build
 
 ```
 ./buildBE.sh arm
-./buildFE.sh arm
 ```
 
 ## Running the project
@@ -29,16 +28,7 @@ cd receipts
 python manage.py runserver 0.0.0.0:8000
 ```
 
-The app should start on `0.0.0.0:8000`
-
-### running the frontend
-```
-cd front-end
-npm i
-npm start
-```
-
-Visit the frontend using `localhost:3000`
+Set up the front-end by checking out this repo: https://github.com/jeremyqzt/ribbon-ui
 
 ### Connecting to GCP
 
