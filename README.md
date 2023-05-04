@@ -64,10 +64,3 @@ Assuming you're in the django directory
 source ../.venv/bin/activate
 python manage.py runserver
 ```
-
-## Running the front end
-Assuming you're in front-end directory
-```
-nvm i
-npm start
-```
