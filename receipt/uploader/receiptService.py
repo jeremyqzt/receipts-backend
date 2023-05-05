@@ -39,4 +39,7 @@ class ReceiptService:
 
         raise NoSuchReceiptForUser
 
+    def update_image(self, pk, file):
+        ...
+
 

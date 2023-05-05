@@ -10,7 +10,6 @@ from uploader.utils import get_sort_text
 from uploader.constants import RECEIPT_COUNT_DEFAULT
 from uploader.receiptService import ReceiptService
 from buckets.service import BucketService
-#from django.core.files.storage import default_storage
 
 class ReceiptEditView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -19,6 +18,20 @@ class ReceiptEditView(APIView):
 
         try:
             inst = service.update_receipt(request.data['uid'], request.data['update_data'])
+            ret_obj = UploadedItemSerializer(inst, many=False)
+            return Response(status=status.HTTP_200_OK, data=ret_obj.data)
+        except:
+            pass
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={ "errors": "Something unexpected happened!" })
+
+class ReceiptImageEditView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        service = ReceiptService(request.user)
+
+        try:
+            inst = service.update_image(request.data['uid'], request.data['image'])
             ret_obj = UploadedItemSerializer(inst, many=False)
             return Response(status=status.HTTP_200_OK, data=ret_obj.data)
         except:
