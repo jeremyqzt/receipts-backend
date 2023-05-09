@@ -11,6 +11,11 @@ class ReceiptService:
     def __init__(self, user):
         self.user = user
 
+    def get_count(self, bucket):
+        files = Receipt.objects.filter(uploaded_by=self.user, alive=True, bucket=bucket)
+        return files.count()
+
+
     def get_receipts(self, bucket, sort=None, start=0, count = RECEIPT_COUNT_DEFAULT, searchTerm=None):
 
         start = int(start)
