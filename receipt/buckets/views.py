@@ -22,6 +22,12 @@ class BucketView(APIView):
         bucket_inst = None
         serializer = BucketCreateSerializer(data=request.data)
 
+        num_buckets = Bucket.objects.filter(created_by=request.user, alive=True).count()
+        if num_buckets >= 6:
+            return Response(
+                status=status.HTTP_402_PAYMENT_REQUIRED, data={"error": "6 Bucket limit reached"}
+            )
+
         if serializer.is_valid():
             bucket_inst = serializer.save(created_by=request.user)
 
