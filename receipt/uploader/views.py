@@ -82,7 +82,7 @@ class ReceiptView(APIView):
             if service.get_count(bucket=bucket) <= RECEIPT_COUNT_LIMIT:
                 receipt_inst = serializer.save(uploaded_by=request.user)
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST, data={"errors": str(RECEIPT_COUNT_LIMIT) + " Limit Reached"})
+                return Response(status=status.HTTP_402_PAYMENT_REQUIRED, data={"errors": str(RECEIPT_COUNT_LIMIT) + " Limit Reached"})
 
         if receipt_inst:
             ret_obj = UploadedItemSerializer(receipt_inst, many=False)
