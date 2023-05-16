@@ -13,8 +13,10 @@ click==7.1.2
 cycler==0.11.0
 da-vinci==0.3.0
 Django==3.2
+django-axes==5.41.1
 django-cleanup==7.0.0
 django-cors-headers==3.10.1
+django-ipware==5.0.0
 django-storages==1.12.3
 django-thumbnails==0.7.0
 djangorestframework==3.12.4
