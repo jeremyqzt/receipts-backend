@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "userSettings",
     "vendor",
     'django_cleanup.apps.CleanupConfig',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = "receipt.urls"
@@ -92,6 +94,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 USE_DB = os.getenv("USE_DB") == "TRUE"
