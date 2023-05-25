@@ -1,6 +1,6 @@
 import math
 from django.db.models import Q
-from receipt.uploader.models import ProcessedState
+from uploader.models import ProcessedState
 
 from uploader.utils import get_sort_text
 from uploader.models import Receipt
