@@ -1,5 +1,6 @@
 import math
 from django.db.models import Q
+from receipt.uploader.models import ProcessedState
 
 from uploader.utils import get_sort_text
 from uploader.models import Receipt
@@ -45,6 +46,17 @@ class ReceiptService:
         raise NoSuchReceiptForUser
 
     def update_image(self, pk, file):
-        ...
+        try:
+            receipt_obj = Receipt.objects.get(pk=pk, alive=True, uploaded_by=self.user)
+            receipt_obj.file = file
+            receipt_obj.thumbnail_file = file
+            receipt_obj.status = ProcessedState.NOT_REQUIRED
+            receipt_obj.threshhold_file = None
+            receipt_obj.parsed_file = None
+            receipt_obj.cropped_file = None
+            receipt_obj.save()
+            return receipt_obj
+        except:
+            return None
 
 

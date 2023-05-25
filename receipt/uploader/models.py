@@ -17,6 +17,7 @@ class ProcessedState(models.IntegerChoices):
     READING_DONE = 6
     POPULATED = 7
     UNABLE_TO_READ = 8
+    NOT_REQUIRED = 9
 
 
 class ExpenseCategory(models.IntegerChoices):
