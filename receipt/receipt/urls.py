@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 
 from rest_framework_simplejwt import views as jwt_views
 
-from uploader.views import ReceiptView, ReceiptDeleteView, ReceiptReParseView, ReceiptEditView
+from uploader.views import ReceiptView, ReceiptDeleteView, ReceiptReParseView, ReceiptEditView, ReceiptImageEditView
 from buckets.views import BucketView, BucketDeleteView, ActiveBucketView
 from authN.views import UserCreateView, UserDeleteView, UserForgotPasswordResetView, UserForgotPasswordView, UserForgotPasswordResetFormView
 from userSettings.views import UserSettingsView
@@ -58,6 +58,7 @@ urlpatterns = [
     path("api/receipt/", ReceiptView.as_view(), name="receipt"),
     path("api/receipt/delete/", ReceiptDeleteView.as_view(), name="receipt_delete"),
     path("api/receipt/update/", ReceiptEditView.as_view(), name="receipt_update"),
+    path("api/receipt/updateImage/", ReceiptImageEditView.as_view(), name="receipt_image_update"),
     path("api/receipt/reprocess/", ReceiptReParseView.as_view(),
          name="receipt_reprocess"),
     path("api/bucket/", BucketView.as_view(), name="bucket"),
