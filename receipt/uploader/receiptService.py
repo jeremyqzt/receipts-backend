@@ -45,6 +45,22 @@ class ReceiptService:
 
         raise NoSuchReceiptForUser
 
+    def update_receipt_with_image(self, pk, update_fields, file):
+        instance, created = Receipt.objects.get_or_create(uploaded_by=self.user, alive=True, pk=pk)
+        if not created and instance:
+            for attr, value in update_fields.items(): 
+                setattr(instance, attr, value)
+            instance.file = file
+            instance.thumbnail_file = file
+            instance.status = ProcessedState.NOT_REQUIRED
+            instance.threshhold_file = None
+            instance.parsed_file = None
+            instance.cropped_file = None
+            instance.save()
+            return instance
+
+        raise NoSuchReceiptForUser
+
     def update_image(self, pk, file):
         try:
             receipt_obj = Receipt.objects.get(pk=pk, alive=True, uploaded_by=self.user)

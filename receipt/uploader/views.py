@@ -36,8 +36,8 @@ class ReceiptImageEditView(APIView):
         service = ReceiptService(request.user)
 
         try:
-            inst = service.update_image(
-                request.data['uid'], request.data['image'])
+            inst = service.update_receipt_with_image(
+                request.data['uid'], request.data['update_data'], request.data['file'])
             ret_obj = UploadedItemSerializer(inst, many=False)
             return Response(status=status.HTTP_200_OK, data=ret_obj.data)
         except:
