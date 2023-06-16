@@ -1,12 +1,9 @@
-from asyncio import exceptions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from uploader.serializers import UploadedItemSerializer, UploadedItemCreateSerializer, ReceiptUpdateSerializer, ReceiptDeleteSerializer, ReceiptReParseSerializer
+from uploader.serializers import UploadedItemSerializer, UploadedItemCreateSerializer, ReceiptDeleteSerializer, ReceiptReParseSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Receipt
 from .readerMain import ReceiptProcessorThread
-from uploader.utils import get_sort_text
 from uploader.constants import RECEIPT_COUNT_DEFAULT, RECEIPT_COUNT_LIMIT
 from uploader.receiptService import ReceiptService
 from buckets.service import BucketService
