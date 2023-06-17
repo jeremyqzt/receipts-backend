@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from uploader.serializers import UploadedItemSerializer, UploadedItemCreateSerializer, ReceiptDeleteSerializer, ReceiptReParseSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from .readerMain import ReceiptProcessorThread
 from uploader.constants import RECEIPT_COUNT_DEFAULT, RECEIPT_COUNT_LIMIT
 from uploader.receiptService import ReceiptService
