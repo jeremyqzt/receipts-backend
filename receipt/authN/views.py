@@ -12,7 +12,8 @@ import uuid
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-
+from gql import gql, Client
+from gql.transport.aiohttp import AIOHTTPTransport
 
 class UserCreateView(APIView):
     def post(self, request):
@@ -89,11 +90,36 @@ class UserForgotPasswordView(APIView):
     def post(self, request):
         username = request.data['username']
 
+        user_inst = User.objects.get(username=username)
+        if not user_inst:
+            return
+
         try:
             PasswordReset.objects.get(username=username)
         except:
             PasswordReset.objects.create(
                 username=username, uuid=str(uuid.uuid4()))
+
+        transport = AIOHTTPTransport(url="http://localhost:8081/")
+
+        # Create a GraphQL client using the defined transport
+        client = Client(transport=transport, fetch_schema_from_transport=True)
+
+        # Provide a GraphQL query
+        query = gql(
+            """
+            query getContinents {
+            continents {
+                code
+                name
+            }
+            }
+            """
+        )
+
+        # Execute the query on the transport
+        result = client.execute(query)
+
         return Response(status=status.HTTP_200_OK, data={})
 
 
