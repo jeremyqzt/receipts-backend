@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 
+
 class UserCreateView(APIView):
     def post(self, request):
         user_inst = None
@@ -90,35 +91,11 @@ class UserForgotPasswordView(APIView):
     def post(self, request):
         username = request.data['username']
 
-        user_inst = User.objects.get(username=username)
-        if not user_inst:
-            return
-
         try:
             PasswordReset.objects.get(username=username)
         except:
             PasswordReset.objects.create(
                 username=username, uuid=str(uuid.uuid4()))
-
-        transport = AIOHTTPTransport(url="http://localhost:8081/")
-
-        # Create a GraphQL client using the defined transport
-        client = Client(transport=transport, fetch_schema_from_transport=True)
-
-        # Provide a GraphQL query
-        query = gql(
-            """
-            query getContinents {
-            continents {
-                code
-                name
-            }
-            }
-            """
-        )
-
-        # Execute the query on the transport
-        result = client.execute(query)
 
         return Response(status=status.HTTP_200_OK, data={})
 
@@ -145,6 +122,28 @@ class UserForgotPasswordResetView(APIView):
         return Response(status=status.HTTP_200_OK, data={})
 
 
+def sendRecoveryEmail(to):
+
+    transport = AIOHTTPTransport(url="http://localhost:8081/graphql")
+
+    client = Client(transport=transport,
+                    fetch_schema_from_transport=True)
+    vars = {"address": to}
+    query = gql(
+        """
+        mutation sendEmail($address:String){
+        sendEmail(toAddress: $address, type: PASSWORD){
+            isSuccess
+            __typename
+        }
+        }
+        """
+    )
+
+    # Execute the query on the transport
+    result = client.execute(query, variable_values=vars)
+
+
 class UserForgotPasswordResetFormView(APIView):
 
     def post(self, request):
@@ -152,14 +151,22 @@ class UserForgotPasswordResetFormView(APIView):
         description = request.data['description']
 
         try:
+            User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_200_OK, data={})
+
+        username = "jq357@hotmail.com"
+        try:
             reset_obj = PasswordResetRequest.objects.get(
                 username=username)
 
+            sendRecoveryEmail(username)
             if reset_obj:
                 return Response(status=status.HTTP_202_ACCEPTED, data={})
         except ObjectDoesNotExist:
-            PasswordResetRequest.objects.create(username=username, description=description)
+            PasswordResetRequest.objects.create(
+                username=username, description=description)
+            sendRecoveryEmail(username)
 
             return Response(status=status.HTTP_200_OK, data={})
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
-
