@@ -156,7 +156,8 @@ class UserForgotPasswordResetFormView(APIView):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_200_OK, data={})
 
-        username = "jq357@hotmail.com"
+        username = username
+        
         try:
             reset_obj = PasswordResetRequest.objects.get(
                 username=username)
