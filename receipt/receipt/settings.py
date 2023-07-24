@@ -154,7 +154,7 @@ else:
 WSGI_APPLICATION = "receipt.wsgi.application"
 
 PARSE_URL = "https://parse.ribbonreceipts.com/parse" if USE_API else "http://ribbonparser.default.svc.cluster.local:8090/parse"
-
+EMAIL_URL = "http://localhost:8081/graphql" if USE_API else "http://ribbonnotif.default.svc.cluster.local:8081/graphql"
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

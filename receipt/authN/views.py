@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
+from receipt.receipt import settings
 
 
 class UserCreateView(APIView):
@@ -124,7 +125,7 @@ class UserForgotPasswordResetView(APIView):
 
 def sendRecoveryEmail(to):
 
-    transport = AIOHTTPTransport(url="http://localhost:8081/graphql")
+    transport = AIOHTTPTransport(url=settings.EMAIL_URL)
 
     client = Client(transport=transport,
                     fetch_schema_from_transport=True)
