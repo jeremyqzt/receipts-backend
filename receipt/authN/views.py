@@ -14,7 +14,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
-from receipt.receipt import settings
+from django.conf import settings
 
 
 class UserCreateView(APIView):

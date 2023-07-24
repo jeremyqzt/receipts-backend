@@ -20,7 +20,6 @@ from uploader.constants import VALID_EXT
 import requests
 from django.conf import settings
 from uploader.constants import SET_FIELDS_VENDOR, SET_FIELDS_SUBTOTAL, SET_FIELDS_TOTAL, SET_FIELDS_DATE
-from django.conf import settings
 
 
 def pill(im):
