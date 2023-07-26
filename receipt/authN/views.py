@@ -123,20 +123,20 @@ class UserForgotPasswordResetView(APIView):
         return Response(status=status.HTTP_200_OK, data={})
 
 
-def sendRecoveryEmail(to):
+def sendRecoveryEmail(to, token):
 
     transport = AIOHTTPTransport(url=settings.EMAIL_URL)
 
     client = Client(transport=transport,
                     fetch_schema_from_transport=True)
-    vars = {"address": to}
+    vars = {"address": to, "token": token}
     query = gql(
         """
-        mutation sendEmail($address:String){
-        sendEmail(toAddress: $address, type: PASSWORD){
-            isSuccess
-            __typename
-        }
+        mutation sendEmail($address:String, $token:String){
+            sendEmail(toAddress: $address, type: PASSWORD, remoteToken:$token){
+                isSuccess
+                __typename
+            }
         }
         """
     )
@@ -150,25 +150,36 @@ class UserForgotPasswordResetFormView(APIView):
     def post(self, request):
         username = request.data['username']
         description = request.data['description']
+        reset_id = str(uuid.uuid4())
 
         try:
             User.objects.get(username=username)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_200_OK, data={})
 
+        try:
+            inst = PasswordReset.objects.get(username=username)
+            sendRecoveryEmail(username, str(inst.uuid))
+        except ObjectDoesNotExist:
+            ...
+
+        try:
+            PasswordReset.objects.create(username=username, uuid=reset_id)
+            sendRecoveryEmail(username, reset_id)
+        except:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
+
         username = username
-        
+
         try:
             reset_obj = PasswordResetRequest.objects.get(
                 username=username)
 
-            sendRecoveryEmail(username)
             if reset_obj:
                 return Response(status=status.HTTP_202_ACCEPTED, data={})
         except ObjectDoesNotExist:
             PasswordResetRequest.objects.create(
                 username=username, description=description)
-            sendRecoveryEmail(username)
 
             return Response(status=status.HTTP_200_OK, data={})
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
