@@ -18,9 +18,9 @@ spec:
         image: $IMAGE
         resources:
           limits:
-            cpu: 400m
+            cpu: 250m
           requests:
-            cpu: 300m
+            cpu: 200m
         volumeMounts:
         - name: google-gcs-key
           mountPath: /var/secrets/google
@@ -58,7 +58,7 @@ spec:
         name: cloudsql-proxy
         resources:
           limits:
-            cpu: 150m
+            cpu: 100m
           requests:
             cpu: 100m
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
