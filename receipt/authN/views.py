@@ -159,13 +159,13 @@ class UserForgotPasswordResetFormView(APIView):
 
         try:
             inst = PasswordReset.objects.get(username=username)
-            #sendRecoveryEmail(username, str(inst.uuid))
+            sendRecoveryEmail(username, str(inst.uuid))
         except ObjectDoesNotExist:
             ...
 
         try:
             PasswordReset.objects.create(username=username, uuid=reset_id)
-            #sendRecoveryEmail(username, reset_id)
+            sendRecoveryEmail(username, reset_id)
         except:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
 
