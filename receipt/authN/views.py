@@ -125,10 +125,10 @@ class UserForgotPasswordResetView(APIView):
 
 def sendRecoveryEmail(to, token):
 
-    transport = AIOHTTPTransport(url=settings.EMAIL_URL)
 
+    transport = AIOHTTPTransport(url=settings.EMAIL_URL)
     client = Client(transport=transport,
-                    fetch_schema_from_transport=True)
+                    fetch_schema_from_transport=False, execute_timeout=60)
     vars = {"address": to, "token": token}
     query = gql(
         """

@@ -18,9 +18,9 @@ spec:
         image: $IMAGE
         resources:
           limits:
-            cpu: 250m
+            cpu: 350m
           requests:
-            cpu: 200m
+            cpu: 300m
         volumeMounts:
         - name: google-gcs-key
           mountPath: /var/secrets/google
@@ -58,9 +58,9 @@ spec:
         name: cloudsql-proxy
         resources:
           limits:
-            cpu: 100m
+            cpu: 150m
           requests:
-            cpu: 100m
+            cpu: 150m
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
                   "-instances=ribbon-receipts:us-east4:ribbon-receipts-db=tcp:5432",
                   "-credential_file=/secrets/cloudsql/credentials.json"]
