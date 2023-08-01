@@ -1,10 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from authN.serializers import (
-    UserCreateSerializer,
-    UserUpdateSerializer,
-)
+
 from rest_framework.permissions import IsAuthenticated
 from authN.models import PasswordReset, PasswordResetRequest
 from authN.services.auth_user_service import AuthUserService
@@ -15,7 +12,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 from django.conf import settings
-
+from authN.serializers import (
+    UserCreateSerializer,
+    UserUpdateSerializer,
+)
 
 class UserCreateView(APIView):
     def post(self, request):
@@ -124,8 +124,6 @@ class UserForgotPasswordResetView(APIView):
 
 
 def sendRecoveryEmail(to, token):
-
-
     transport = AIOHTTPTransport(url=settings.EMAIL_URL)
     client = Client(transport=transport,
                     fetch_schema_from_transport=False, execute_timeout=60)
@@ -140,9 +138,8 @@ def sendRecoveryEmail(to, token):
         }
         """
     )
+    client.execute(query, variable_values=vars)
 
-    # Execute the query on the transport
-    result = client.execute(query, variable_values=vars)
 
 
 class UserForgotPasswordResetFormView(APIView):
@@ -161,13 +158,11 @@ class UserForgotPasswordResetFormView(APIView):
             inst = PasswordReset.objects.get(username=username)
             sendRecoveryEmail(username, str(inst.uuid))
         except ObjectDoesNotExist:
-            ...
-
-        try:
-            PasswordReset.objects.create(username=username, uuid=reset_id)
-            sendRecoveryEmail(username, reset_id)
-        except:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
+            try:
+                PasswordReset.objects.create(username=username, uuid=reset_id)
+                sendRecoveryEmail(username, reset_id)
+            except:
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
 
         try:
             reset_obj = PasswordResetRequest.objects.get(
