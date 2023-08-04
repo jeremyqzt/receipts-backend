@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "buckets",
     "userSettings",
     "vendor",
+    "premium",
     'django_cleanup.apps.CleanupConfig',
     'axes',
 ]
