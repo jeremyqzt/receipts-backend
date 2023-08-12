@@ -88,19 +88,6 @@ class UserForgotPasswordAdminView(APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED, data={})
 
 
-class UserForgotPasswordView(APIView):
-    def post(self, request):
-        username = request.data['username']
-
-        try:
-            PasswordReset.objects.get(username=username)
-        except:
-            PasswordReset.objects.create(
-                username=username, uuid=str(uuid.uuid4()))
-
-        return Response(status=status.HTTP_200_OK, data={})
-
-
 class UserForgotPasswordResetView(APIView):
 
     def post(self, request):
