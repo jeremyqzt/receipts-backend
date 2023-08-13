@@ -41,6 +41,7 @@ urlpatterns = [
     path("user/create/", UserCreateView.as_view(), name="create_user_view"),
     path("user/delete/", UserDeleteView.as_view(), name="delete_user_view"),
     path("user/forgotPassword/", UserForgotPasswordResetView.as_view(), name="forgot_password_view"),
+    path("user/resetPassword/", UserForgotPasswordView.as_view(), name="reset_password_view"),
     path("user/resetPasswordForm/", UserForgotPasswordResetFormView.as_view(), name="reset_password_form_view"),
 
     path(
