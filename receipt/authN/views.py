@@ -143,6 +143,7 @@ def sendRecoveryEmail(to, token):
 
 
 class UserForgotPasswordResetFormView(APIView):
+    authentication_classes = [] #disables authentication
 
     def post(self, request):
         username = request.data['username']
