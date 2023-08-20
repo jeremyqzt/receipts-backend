@@ -89,6 +89,8 @@ class UserForgotPasswordAdminView(APIView):
 
 
 class UserForgotPasswordView(APIView):
+    authentication_classes = [] #disables authentication
+
     def post(self, request):
         username = request.data['username']
 
@@ -102,6 +104,7 @@ class UserForgotPasswordView(APIView):
 
 
 class UserForgotPasswordResetView(APIView):
+    authentication_classes = [] #disables authentication
 
     def post(self, request):
         username = request.data['username']
