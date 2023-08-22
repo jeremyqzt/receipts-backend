@@ -32,11 +32,11 @@ from rest_framework.decorators import api_view
 
 
 @api_view(('GET',))
-def ok_boomer(_):
+def liviliness_check(_):
     return Response(status=status.HTTP_200_OK)
 
 urlpatterns = [
-    path("", ok_boomer, name="liveliness"),
+    path("", liviliness_check, name="liveliness"),
     path("admin/", admin.site.urls),
     path("user/create/", UserCreateView.as_view(), name="create_user_view"),
     path("user/delete/", UserDeleteView.as_view(), name="delete_user_view"),
