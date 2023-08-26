@@ -143,7 +143,22 @@ def sendRecoveryEmail(to, token):
     )
     client.execute(query, variable_values=vars)
 
-
+def sendRecoveryCompleteEmail(to):
+    transport = AIOHTTPTransport(url=settings.EMAIL_URL)
+    client = Client(transport=transport,
+                    fetch_schema_from_transport=False, execute_timeout=60)
+    vars = {"address": to, "token": "token"}
+    query = gql(
+        """
+        mutation sendEmail($address:String, $token:String){
+            sendEmail(toAddress: $address, type: RECOVERY_DONE, remoteToken:$token){
+                isSuccess
+                __typename
+            }
+        }
+        """
+    )
+    client.execute(query, variable_values=vars)
 
 class UserForgotPasswordResetFormView(APIView):
     authentication_classes = [] #disables authentication
