@@ -123,6 +123,12 @@ class UserForgotPasswordResetView(APIView):
             user_inst.password = make_password(new_password)
             user_inst.save()
 
+            try:
+                sendRecoveryCompleteEmail(username)
+            except:
+                # Pass, nothing to do
+                ...
+
         return Response(status=status.HTTP_200_OK, data={})
 
 
