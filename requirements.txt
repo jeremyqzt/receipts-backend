@@ -22,6 +22,7 @@ django-axes==5.41.1
 django-cleanup==7.0.0
 django-cors-headers==3.10.1
 django-ipware==5.0.0
+django-otp==1.2.2
 django-storages==1.12.3
 django-thumbnails==0.7.0
 djangorestframework==3.12.4

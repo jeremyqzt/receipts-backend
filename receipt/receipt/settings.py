@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "premium",
     'django_cleanup.apps.CleanupConfig',
     'axes',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +70,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_otp.middleware.OTPMiddleware',
     'axes.middleware.AxesMiddleware',
 ]
 
