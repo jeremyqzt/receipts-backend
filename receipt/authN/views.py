@@ -16,6 +16,10 @@ from authN.serializers import (
     UserCreateSerializer,
     UserUpdateSerializer,
 )
+from django_otp.oath import TOTP
+from django_otp.util import random_hex
+from unittest import mock
+import time
 
 class UserCreateView(APIView):
     def post(self, request):
