@@ -16,10 +16,6 @@ from authN.serializers import (
     UserCreateSerializer,
     UserUpdateSerializer,
 )
-from django_otp.oath import TOTP
-from django_otp.util import random_hex
-from unittest import mock
-import time
 
 class UserCreateView(APIView):
     def post(self, request):
@@ -206,23 +202,3 @@ class UserForgotPasswordResetFormView(APIView):
             return Response(status=status.HTTP_200_OK, data={})
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
 
-def get_user_totp_device(self, user, confirmed=None):
-    devices = devices_for_user(user, confirmed=confirmed)
-    for device in devices:
-        if isinstance(device, TOTPDevice):
-            return device
-
-class TOTPVerifyView(APIView):
-    """
-    Use this endpoint to verify/enable a TOTP device
-    """
-    permission_classes = (IsAuthenticated,)
-    def post(self, request, token, format=None):
-        user = request.user
-        device = get_user_totp_device(self, user)
-        if not device == None and device.verify_token(token):
-            if not device.confirmed:
-                device.confirmed = True
-                device.save()
-            return Response(True, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
