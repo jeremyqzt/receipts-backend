@@ -22,6 +22,7 @@ from rest_framework_simplejwt import views as jwt_views
 from uploader.views import ReceiptView, ReceiptDeleteView, ReceiptReParseView, ReceiptEditView, ReceiptImageEditView
 from buckets.views import BucketView, BucketDeleteView, ActiveBucketView
 from authN.views import UserCreateView, UserDeleteView, UserForgotPasswordResetView, UserForgotPasswordView, UserForgotPasswordResetFormView
+from authN.mfaViews import TOTPCreateView, TOTPVerifyView
 from userSettings.views import UserSettingsView
 from analytics.views import AnalyticsMonthlyTotalsView, AnalyticsCategoryTotalView, AnalyticsMonthlyAverageView, AnalyticsReceiptCountView, AnalyticsVendorFrequencyView, AnalyticsReceiptCategoryCountView
 from vendor.views import VendorView, VendorDeleteView
@@ -29,7 +30,6 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-
 
 @api_view(('GET',))
 def liviliness_check(_):
@@ -43,6 +43,8 @@ urlpatterns = [
     path("user/forgotPassword/", UserForgotPasswordResetView.as_view(), name="forgot_password_view"),
     path("user/resetPassword/", UserForgotPasswordView.as_view(), name="reset_password_view"),
     path("user/resetPasswordForm/", UserForgotPasswordResetFormView.as_view(), name="reset_password_form_view"),
+    path("user/mfaCreate/", TOTPCreateView.as_view(), name="mfaCreate"),
+    path("user/mfaVerify/", TOTPVerifyView.as_view(), name="mfaVerify"),
 
     path(
         "auth/token/", jwt_views.TokenObtainPairView.as_view(), name="token_obtain_pair"
