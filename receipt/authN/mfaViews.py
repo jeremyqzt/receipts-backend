@@ -14,6 +14,15 @@ class TOTPCreateView(views.APIView):
     Use this endpoint to set up a new TOTP device
     """
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        device = get_user_totp_device(self, user)
+
+        if device: return True
+
+        return False
+
     def post(self, request, format=None):
         user = request.user
         device = get_user_totp_device(self, user)
