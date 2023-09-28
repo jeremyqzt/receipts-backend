@@ -27,7 +27,7 @@ class TOTPCreateView(views.APIView):
 
         return Response(True, status=status.HTTP_200_OK)
 
-    def post(self, request, format=None):
+    def post(self, request):
         user = request.user
         device = get_user_totp_device(self, user)
         if not device:
@@ -42,8 +42,9 @@ class TOTPVerifyView(views.APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, token, format=None):
+    def post(self, request):
         user = request.user
+        token = request.data["token"]
         device = get_user_totp_device(self, user)
         if not device == None and device.verify_token(token):
             if not device.confirmed:
