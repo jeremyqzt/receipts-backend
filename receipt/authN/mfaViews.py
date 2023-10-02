@@ -23,9 +23,9 @@ class TOTPCreateView(views.APIView):
         device = get_user_totp_device(self, user)
 
         if device:
-            return Response(False, status=status.HTTP_200_OK)
+            return Response(device.confirmed, status=status.HTTP_200_OK)
 
-        return Response(True, status=status.HTTP_200_OK)
+        return Response(False, status=status.HTTP_200_OK)
 
     def post(self, request):
         user = request.user
