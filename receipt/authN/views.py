@@ -1,6 +1,8 @@
+from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from rest_framework.permissions import IsAuthenticated
 from authN.models import PasswordReset, PasswordResetRequest
@@ -16,6 +18,7 @@ from authN.serializers import (
     UserCreateSerializer,
     UserUpdateSerializer,
 )
+
 
 class UserCreateView(APIView):
     def post(self, request):
@@ -89,7 +92,7 @@ class UserForgotPasswordAdminView(APIView):
 
 
 class UserForgotPasswordView(APIView):
-    authentication_classes = [] #disables authentication
+    authentication_classes = []  # disables authentication
 
     def post(self, request):
         username = request.data['username']
@@ -104,7 +107,7 @@ class UserForgotPasswordView(APIView):
 
 
 class UserForgotPasswordResetView(APIView):
-    authentication_classes = [] #disables authentication
+    authentication_classes = []  # disables authentication
 
     def post(self, request):
         username = request.data['username']
@@ -149,6 +152,7 @@ def sendRecoveryEmail(to, token):
     )
     client.execute(query, variable_values=vars)
 
+
 def sendRecoveryCompleteEmail(to):
     transport = AIOHTTPTransport(url=settings.EMAIL_URL)
     client = Client(transport=transport,
@@ -166,8 +170,9 @@ def sendRecoveryCompleteEmail(to):
     )
     client.execute(query, variable_values=vars)
 
+
 class UserForgotPasswordResetFormView(APIView):
-    authentication_classes = [] #disables authentication
+    authentication_classes = []  # disables authentication
 
     def post(self, request):
         username = request.data['username']
@@ -202,3 +207,7 @@ class UserForgotPasswordResetFormView(APIView):
             return Response(status=status.HTTP_200_OK, data={})
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Replace the serializer with your custom
+    serializer_class = CustomTokenObtainPairSerializer

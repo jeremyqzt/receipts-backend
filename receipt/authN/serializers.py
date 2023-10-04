@@ -44,3 +44,23 @@ class UserUpdateSerializer(serializers.Serializer):
                 user_obj.email = username
 
         return user_obj
+
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from datetime import timedelta
+
+SUPERUSER_LIFETIME=timedelta(days=7),
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super(TokenObtainPairSerializer, self).validate(attrs)
+        refresh = self.get_token(self.user)
+        data['refresh'] = refresh
+        if self.user.is_superuser:
+            new_token = refresh.access_token
+            new_token.set_exp(lifetime=SUPERUSER_LIFETIME)
+            data['access'] = new_token
+        else:
+            data['access'] = refresh.access_token
+        return data
