@@ -49,8 +49,10 @@ class UserUpdateSerializer(serializers.Serializer):
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from datetime import timedelta
+from .mfaViews import get_user_totp_device
 
-SUPERUSER_LIFETIME=timedelta(days=7),
+NORMAL_LIFE_TIME=timedelta(days=7),
+MFA_TOKEN_LIFE_TIME=timedelta(seconds=60),
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -59,7 +61,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['refresh'] = refresh
         if self.user.is_superuser:
             new_token = refresh.access_token
-            new_token.set_exp(lifetime=SUPERUSER_LIFETIME)
+            new_token.set_exp(lifetime=NORMAL_LIFE_TIME)
+            device = get_user_totp_device(self, self.user)
+            if device:
+                new_token.set_exp(lifetime=MFA_TOKEN_LIFE_TIME)
             data['access'] = new_token
         else:
             data['access'] = refresh.access_token

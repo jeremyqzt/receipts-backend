@@ -52,3 +52,27 @@ class TOTPVerifyView(views.APIView):
                 device.save()
             return Response(True, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+from rest_framework_simplejwt.tokens import RefreshToken
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+class TOTPReissueView(views.APIView):
+    """
+    Use this endpoint to verify/enable a TOTP device
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        token = request.data["token"]
+        device = get_user_totp_device(self, user)
+        if not device == None and device.verify_token(token):
+            return Response(get_tokens_for_user(user), status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
