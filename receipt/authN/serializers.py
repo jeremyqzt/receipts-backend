@@ -59,12 +59,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super(TokenObtainPairSerializer, self).validate(attrs)
         refresh = self.get_token(self.user)
         data['refresh'] = refresh
+        data['mfaRequired'] = False
         if self.user.is_superuser:
             new_token = refresh.access_token
             new_token.set_exp(lifetime=NORMAL_LIFE_TIME)
             device = get_user_totp_device(self, self.user)
             if device:
                 new_token.set_exp(lifetime=MFA_TOKEN_LIFE_TIME)
+                data['mfaRequired'] = True
             data['access'] = new_token
         else:
             data['access'] = refresh.access_token
