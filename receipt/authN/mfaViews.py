@@ -59,14 +59,14 @@ def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
 
     return {
-        'mfaDone': True,
+        'mfaVerified': True,
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
 
 class TOTPReissueView(views.APIView):
     """
-    Use this endpoint to verify/enable a TOTP device
+    Use this endpoint to verify a TOTP
     """
     permission_classes = [permissions.IsAuthenticated]
 
