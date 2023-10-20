@@ -66,7 +66,7 @@ def get_tokens_for_user(user):
 
 class TOTPReissueView(views.APIView):
     """
-    Use this endpoint to verify a TOTP
+    Use this endpoint to verify a TOTP, and re-issue a token
     """
     permission_classes = [permissions.IsAuthenticated]
 
@@ -76,4 +76,23 @@ class TOTPReissueView(views.APIView):
         device = get_user_totp_device(self, user)
         if not device == None and device.verify_token(token):
             return Response(get_tokens_for_user(user), status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class TOTDisableView(views.APIView):
+    """
+    Use this endpoint to verify a TOTP, and re-issue a token
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        token = request.data["token"]
+
+        device = get_user_totp_device(self, user)
+        if not device == None:
+            if not device == None and device.verify_token(token):
+                device.confirmed = False
+                device.save()
+            return Response({}, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
