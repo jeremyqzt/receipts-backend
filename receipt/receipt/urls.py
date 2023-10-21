@@ -22,7 +22,7 @@ from rest_framework_simplejwt import views as jwt_views
 from uploader.views import ReceiptView, ReceiptDeleteView, ReceiptReParseView, ReceiptEditView, ReceiptImageEditView
 from buckets.views import BucketView, BucketDeleteView, ActiveBucketView
 from authN.views import UserCreateView, UserDeleteView, UserForgotPasswordResetView, CustomTokenObtainPairView, UserForgotPasswordView, UserForgotPasswordResetFormView
-from authN.mfaViews import TOTPCreateView, TOTPVerifyView, TOTPReissueView
+from authN.mfaViews import TOTPCreateView, TOTPVerifyView, TOTPReissueView, TOTDisableView
 from userSettings.views import UserSettingsView
 from analytics.views import AnalyticsMonthlyTotalsView, AnalyticsCategoryTotalView, AnalyticsMonthlyAverageView, AnalyticsReceiptCountView, AnalyticsVendorFrequencyView, AnalyticsReceiptCategoryCountView
 from vendor.views import VendorView, VendorDeleteView
@@ -46,6 +46,7 @@ urlpatterns = [
     path("user/mfaCreate/", TOTPCreateView.as_view(), name="mfaCreate"),
     path("user/mfaVerify/", TOTPVerifyView.as_view(), name="mfaVerify"),
     path("user/mfaLogin/", TOTPReissueView.as_view(), name="mfaLogin"),
+    path("user/mfaDisable/", TOTDisableView.as_view(), name="mfaDisable"),
 
     path(
         "v2/auth/token/", CustomTokenObtainPairView.as_view(), name="custom_token_obtain_pair"
