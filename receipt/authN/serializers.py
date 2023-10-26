@@ -62,7 +62,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         new_token = refresh.access_token
         new_token.set_exp(lifetime=timedelta(days=7))
         device = get_user_totp_device(self, self.user)
-        if device:
+        if device and device.confirmed:
             new_token.set_exp(lifetime=timedelta(seconds=45))
             data['mfaRequired'] = True
         data['access'] = str(new_token)
