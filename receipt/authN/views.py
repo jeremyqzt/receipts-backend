@@ -1,3 +1,4 @@
+from receipt.authN.mfaViews import get_user_totp_device
 from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -126,6 +127,11 @@ class UserForgotPasswordResetView(APIView):
             user_inst.password = make_password(new_password)
             user_inst.save()
 
+            device = get_user_totp_device(self, user_inst)
+
+            if not device == None and device.confirmed == True:
+                device.confirmed = False
+                device.save()
             try:
                 sendRecoveryCompleteEmail(username)
             except:
