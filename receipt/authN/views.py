@@ -1,4 +1,4 @@
-from receipt.authN.mfaViews import get_user_totp_device
+from authN.mfaViews import get_user_totp_device
 from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -80,7 +80,6 @@ class UserDeleteView(APIView):
 
 class UserForgotPasswordAdminView(APIView):
     permission_classes = (IsAuthenticated,)
-
     def post(self, request):
         user_inst = request.user
         username = request.data['username']
@@ -135,8 +134,7 @@ class UserForgotPasswordResetView(APIView):
             try:
                 sendRecoveryCompleteEmail(username)
             except:
-                # Pass, nothing to do
-                ...
+                Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data={})
 
         return Response(status=status.HTTP_200_OK, data={})
 
