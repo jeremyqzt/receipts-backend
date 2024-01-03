@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class Notification(models.Model):
+    message = models.TextField()
+    timeStamp = models.DateTimeField(auto_now=True)
+    alive = models.BooleanField()

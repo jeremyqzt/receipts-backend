@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "userSettings",
     "vendor",
     "premium",
+    "notifs",
     'django_cleanup.apps.CleanupConfig',
     'axes',
     'django_otp',
